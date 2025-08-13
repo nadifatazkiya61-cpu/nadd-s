@@ -1,317 +1,223 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SweetCrumbs Bakery — Koleksi Kue lezat dan yang pastinya enakkk</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --cream:#FFF6EB;
-      --soft-cream:#FFF2E0;
-      --maroon:#7E1F25;
-      --accent:#A32B2F;
-      --muted:#6B6B6B;
-      --glass: rgba(255,255,255,0.6);
-      --card-shadow: 0 8px 24px rgba(0,0,0,0.08);
-      --radius:14px;
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--cream),#fff);color:#222}
-
-    /* Header */
-    .topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 32px;gap:18px}
-    .brand{display:flex;align-items:center;gap:14px}
-    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--maroon),var(--accent));display:flex;align-items:center;justify-content:center;color:white;font-weight:700;box-shadow:var(--card-shadow)}
-    .brand h1{margin:0;font-size:18px}
-    .brand p{margin:0;font-size:12px;color:var(--muted)}
-
-    /* Controls */
-    .controls{display:flex;align-items:center;gap:12px}
-    .search{display:flex;align-items:center;background:var(--soft-cream);padding:8px 12px;border-radius:10px;box-shadow:var(--card-shadow)}
-    .search input{border:0;background:transparent;outline:none;width:220px;font-size:14px}
-    .filters{display:flex;gap:8px}
-    .chip{cursor:pointer;padding:8px 12px;border-radius:999px;background:white;border:1px solid rgba(0,0,0,0.05);font-size:13px}
-    .chip.active{background:var(--maroon);color:white;border-color:var(--maroon)}
-
-    /* Layout */
-    .container{max-width:1200px;margin:18px auto;padding:12px}
-    .hero{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:22px;background:linear-gradient(90deg,rgba(255,255,255,0.6), rgba(255,255,255,0.8));border-radius:18px;box-shadow:var(--card-shadow)}
-    .hero .text h2{margin:0;font-size:28px}
-    .hero .text p{margin:8px 0 0;color:var(--muted)}
-    .hero .actions{display:flex;gap:10px;margin-top:10px}
-    .btn{padding:10px 16px;border-radius:12px;border:0;cursor:pointer;font-weight:600}
-    .btn-primary{background:var(--maroon);color:white}
-    .btn-ghost{background:transparent;border:1px solid rgba(0,0,0,0.06)}
-
-    /* Grid */
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:18px}
-    .card{background:linear-gradient(180deg,white,var(--glass));border-radius:12px;padding:14px;box-shadow:var(--card-shadow);position:relative;overflow:visible;transition:transform .28s ease, box-shadow .28s ease}
-    .card:hover{transform:translateY(-8px)}
-    .card .img{height:170px;border-radius:10px;background:linear-gradient(180deg,#fff, #ffecec);display:flex;align-items:center;justify-content:center;margin-bottom:12px;position:relative}
-    .badge{position:absolute;top:14px;left:14px;background:var(--maroon);color:white;padding:6px 8px;border-radius:8px;font-size:12px}
-
-    .cake-name{font-weight:600;margin:0 0 6px}
-    .cake-desc{font-size:13px;color:var(--muted);margin:0 0 10px}
-    .price{font-weight:700}
-    .meta{display:flex;align-items:center;justify-content:space-between;gap:8px}
-    .actions-row{display:flex;gap:8px}
-    .btn-small{padding:8px 10px;border-radius:10px;border:0;cursor:pointer}
-
-    /* subtle tilt on image */
-    .img > svg{transform-origin:center;transition:transform .5s cubic-bezier(.2,.9,.3,1)}
-    .card:hover .img > svg{transform:rotate(-6deg) translateY(-4px)}
-
-    /* cart */
-    .cart{position:fixed;right:20px;bottom:20px;background:var(--maroon);color:white;padding:10px;border-radius:999px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(126,31,37,0.18)}
-    .cart .count{position:absolute;top:-8px;right:-8px;background:#ffd; color:var(--maroon);padding:4px 6px;border-radius:999px;font-weight:700;font-size:12px}
-
-    /* modal */
-    .modal{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;padding:24px}
-    .modal.open{display:flex}
-    .modal .dialog{background:white;border-radius:12px;padding:18px;max-width:860px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .big-img{height:320px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff,#fff6f4)}
-
-    /* responsive */
-    @media(max-width:800px){
-      .hero{flex-direction:column;align-items:flex-start}
-      .modal .dialog{grid-template-columns:1fr}
-    }
-
-    /* subtle entrance */
-    .card{opacity:0;transform:translateY(12px);animation:fadeInUp .6s ease forwards}
-    .card:nth-child(1){animation-delay:.06s}
-    .card:nth-child(2){animation-delay:.12s}
-    .card:nth-child(3){animation-delay:.18s}
-    .card:nth-child(4){animation-delay:.24s}
-    .card:nth-child(5){animation-delay:.30s}
-    @keyframes fadeInUp{to{opacity:1;transform:none}}
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SweetCrumbs — Toko Aneka Kue Kekinian</title>
+  <meta name="description" content="SweetCrumbs • Toko aneka kue kekinian. Fresh & homemade setiap hari. Pesan mudah, antar cepat.">
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-  <div class="topbar container">
-    <div class="brand">
-      <div class="logo">SC</div>
-      <div>
-        <h1>SweetCrumbs</h1>
-        <p>Toko kue - Fresh & Homemade</p>
+  <!-- ===== HEADER / NAV ===== -->
+  <header class="topbar">
+    <div class="wrap">
+      <a href="#" class="brand" aria-label="SweetCrumbs">
+        <div class="logo">🍰</div>
+        <div class="brand-text">
+          <strong>SweetCrumbs</strong>
+          <span>Fresh • Homemade • Daily</span>
+        </div>
+      </a>
+
+      <nav class="nav">
+        <a href="#menu">Menu</a>
+        <a href="#signature">Signature</a>
+        <a href="#why">Kenapa Kami</a>
+        <a href="#testi">Testimoni</a>
+      </nav>
+
+      <div class="actions">
+        <button id="openSearch" class="icon-btn" aria-label="Cari kue">🔎</button>
+        <button id="openCart" class="cart-btn" aria-label="Buka keranjang">
+          🛒 <span id="cartCount" class="count">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== HERO + SLIDER ===== -->
+  <section class="hero">
+    <div class="slider" id="slider">
+      <div class="slides">
+        <div class="slide is-active" style="--bg:url('https://images.unsplash.com/photo-1464347744102-11db6282f854?q=80&w=1600&auto=format&fit=crop')">
+          <div class="slide-content">
+            <h1>Kue Selezat Senyumanmu</h1>
+            <p>Resep turun-temurun, diolah modern. Selalu fresh setiap hari.</p>
+            <a href="#menu" class="btn primary">Lihat Menu</a>
+          </div>
+        </div>
+        <div class="slide" style="--bg:url('https://images.unsplash.com/photo-1541782814458-70c4cb23d2d0?q=80&w=1600&auto=format&fit=crop')">
+          <div class="slide-content">
+            <h1>Cheesecake Premium</h1>
+            <p>Lembut, creamy, dan lumer. Favorit pelanggan!</p>
+            <a href="#signature" class="btn">Coba Sekarang</a>
+          </div>
+        </div>
+        <div class="slide" style="--bg:url('https://images.unsplash.com/photo-1519869325930-281384150729?q=80&w=1600&auto=format&fit=crop')">
+          <div class="slide-content">
+            <h1>Cupcake Seru</h1>
+            <p>Warna-warni untuk semua momen bahagia.</p>
+            <a href="#menu" class="btn">Pesan Varian</a>
+          </div>
+        </div>
+      </div>
+      <div class="slider-ui">
+        <button class="nav prev" id="prevSlide" aria-label="Sebelumnya">‹</button>
+        <div class="dots" id="sliderDots"></div>
+        <button class="nav next" id="nextSlide" aria-label="Berikutnya">›</button>
       </div>
     </div>
 
-    <div class="controls">
-      <div class="search">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="opacity:.7"><path d="M21 21l-4.35-4.35" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <input id="searchInput" placeholder="""Temukan cita rasa terbaik..."..." />
-      </div>
-      <div class="filters" id="filterRow">
-        <div class="chip active" data-cat="all">all</div>
-        <div class="chip" data-cat="cheesecake">Cheesecake</div>
-        <div class="chip" data-cat="chocolate">chocolate</div>
-        <div class="chip" data-cat="fruit">fruit</div>
-        <div class="chip" data-cat="cupcake">Cupcake</div>
-      </div>
+    <div class="usp">
+      <div class="usp-item">🚚 Antar cepat</div>
+      <div class="usp-item">🥛 Bahan premium</div>
+      <div class="usp-item">🧁 Fresh harian</div>
+      <div class="usp-item">💬 CS ramah</div>
+    </div>
+  </section>
+
+  <!-- ===== SEARCH OVERLAY ===== -->
+  <div class="search-overlay" id="searchLayer" aria-hidden="true">
+    <div class="search-box">
+      <input id="searchInput" type="search" placeholder="Cari kue favoritmu… (contoh: strawberry, cokelat)" />
+      <button id="closeSearch" class="icon-btn">✕</button>
     </div>
   </div>
 
-  <main class="container">
-    <section class="hero">
-      <div class="text">
-        <h2>Lumer Cake & Bakery</h2>
-        <p>"Kue yang Bicara Lewat Rasa".</p>
-        <div class="actions">
-          <button class="btn btn-primary" id="viewAllBtn">Lihat Semua dari bagian toko kue ini</button>
-          <button class="btn btn-ghost" id="specialBtn">Promo di setiap hari jumat</button>
+  <!-- ===== MENU GRID ===== -->
+  <section id="menu" class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="title">Menu SweetCrumbs</h2>
+        <div class="filters">
+          <button class="chip is-active" data-cat="Semua">Semua</button>
+          <button class="chip" data-cat="Cheesecake">Cheesecake</button>
+          <button class="chip" data-cat="Cokelat">Cokelat</button>
+          <button class="chip" data-cat="Buah">Buah</button>
+          <button class="chip" data-cat="Cupcake">Cupcake</button>
+          <select id="sortSelect" class="select">
+            <option value="popular">Populer</option>
+            <option value="price-asc">Harga Terendah</option>
+            <option value="price-desc">Harga Tertinggi</option>
+            <option value="name-asc">Nama A–Z</option>
+            <option value="name-desc">Nama Z–A</option>
+          </select>
         </div>
       </div>
-      <div class="visual" style="min-width:260px;">
-        <div style="background:linear-gradient(135deg,#fff,#fff7f3);padding:14px;border-radius:12px;box-shadow:var(--card-shadow)">
-          <svg width="220" height="120" viewBox="0 0 220 120" fill="none" aria-hidden>
-            <rect x="4" y="30" width="212" height="70" rx="12" fill="#fff" stroke="#F4D1CF"/>
-            <circle cx="44" cy="60" r="28" fill="#fff3f3" stroke="#FFD6D6"/>
-            <circle cx="100" cy="48" r="18" fill="#fff6f0" stroke="#FFD6D6"/>
-            <circle cx="156" cy="66" r="20" fill="#fff9f5" stroke="#FFD6D6"/>
-          </svg>
-        </div>
-      </div>
-    </section>
 
-    <section class="grid" id="productGrid">
-      <!-- Cards generated by JS -->
-    </section>
-  </main>
+      <div id="grid" class="grid"></div>
 
-  <div class="cart" id="cartBtn" title="keranjangnya disini yaaa">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 6h15l-1.5 9h-12z" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1" fill="white"/><circle cx="18" cy="20" r="1" fill="white"/></svg>
-    <div class="count" id="cartCount" style="display:none">0</div>
-  </div>
-
-  <div class="modal" id="modal">
-    <div class="dialog">
-      <div class="big-img" id="modalImg"></div>
-      <div>
-        <h3 id="modalTitle">Nama Kue</h3>
-        <p id="modalDesc" style="color:var(--muted)"></p>
-        <p style="font-weight:800;font-size:20px;margin-top:12px" id="modalPrice">Rp0</p>
-        <div style="margin-top:16px;display:flex;gap:10px">
-          <button class="btn btn-primary" id="modalAdd">klik disini ya</button>
-          <button class="btn btn-ghost" id="modalClose">selesai</button>
-        </div>
-      </div>
+      <div id="empty" class="empty" hidden>Hmm… belum ada yang cocok. Coba ubah kata kunci atau kategori ya.</div>
     </div>
-  </div>
+  </section>
 
-  <script>
-    // sample product data
-    const products = [
-      {id:1,name:'Red Velvet Cake',cat:'cake',tag:'cheesecake',desc:'Lapis lembut dengan krim keju.',price:85000,flavor:'Red Velvet'},
-      {id:2,name:'Classic Cheesecake',cat:'cake',tag:'cheesecake',desc:'Klasik, kaya, dan creamy.',price:95000,flavor:'Cheese'},
-      {id:3,name:'Chocolate Fudge',cat:'cake',tag:'chocolate',desc:'Intens cokelat dengan glaze.',price:78000,flavor:'Chocolate'},
-      {id:4,name:'Strawberry Tart',cat:'tart',tag:'fruit',desc:'Segar dengan buah lokal.',price:65000,flavor:'Strawberry'},
-      {id:5,name:'Lemon Drizzle',cat:'cake',tag:'fruit',desc:'Asam manis, ringan.',price:72000,flavor:'Lemon'},
-      {id:6,name:'Mini Cupcakes (8pcs)',cat:'cupcake',tag:'cupcake',desc:'Assorted mini cupcake box.',price:62000,flavor:'Assorted'},
-      {id:7,name:'Triple Chocolate Mousse',cat:'cake',tag:'chocolate',desc:'Mousse lembut berlapis cokelat.',price:98000,flavor:'Chocolate'},
-      {id:8,name:'Mango Crepe Cake',cat:'cake',tag:'fruit',desc:'Lapis tipis crepes & mangga.',price:87000,flavor:'Mango'}
-    ];
-
-    const grid = document.getElementById('productGrid');
-    const searchInput = document.getElementById('searchInput');
-    const filterRow = document.getElementById('filterRow');
-    const cartCountEl = document.getElementById('cartCount');
-    const cartBtn = document.getElementById('cartBtn');
-    const modal = document.getElementById('modal');
-    const modalImg = document.getElementById('modalImg');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalDesc = document.getElementById('modalDesc');
-    const modalPrice = document.getElementById('modalPrice');
-    const modalAdd = document.getElementById('modalAdd');
-    const modalClose = document.getElementById('modalClose');
-
-    let cartCount = 0;
-    let activeCategory = 'all';
-
-    function money(num){return 'Rp' + num.toLocaleString('id-ID')}
-
-    function cakeSVG(name){
-      // simple inline SVG as placeholder; unique color per name hash
-      const hue = Math.abs(Array.from(name).reduce((a,c)=>a+c.charCodeAt(0),0)) % 360;
-      return `<svg width="180" height="140" viewBox="0 0 180 140" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-        <rect x="6" y="48" rx="10" width="168" height="78" fill="hsl(${hue} 60% 95%)" stroke="hsl(${hue} 50% 80%)" />
-        <g transform="translate(22,22)">
-          <ellipse cx="48" cy="48" rx="42" ry="28" fill="hsl(${hue} 70% 85%)" stroke="hsl(${hue} 60% 75%)" />
-          <rect x="6" y="32" rx="6" width="84" height="34" fill="hsl(${hue} 60% 90%)"/>
-        </g>
-      </svg>`;
-    }
-
-    function renderGrid(list){
-      grid.innerHTML='';
-      list.forEach(p=>{
-        const card = document.createElement('article');
-        card.className='card';
-        card.innerHTML = `
-          <div class="img">${cakeSVG(p.name)}</div>
-          <div>
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><h4 class="cake-name">${p.name}</h4><div style="margin-left:auto;color:var(--muted);font-size:13px">${p.flavor}</div></div>
-            <p class="cake-desc">${p.desc}</p>
-            <div class="meta">
-              <div class="price">${money(p.price)}</div>
-              <div class="actions-row">
-                <button class="btn-small" data-id="${p.id}" data-action="view">Lihat</button>
-                <button class="btn-small btn-primary" data-id="${p.id}" data-action="add">Tambah</button>
-              </div>
+  <!-- ===== SIGNATURE: ROULETTE REKOMENDASI CHEF ===== -->
+  <section id="signature" class="section alt">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="title">Signature • Rekomendasi Chef</h2>
+        <p>Klik “Acak Rekomendasi” untuk menemukan kue yang lagi hype 🔥</p>
+      </div>
+      <div class="roulette">
+        <div class="roulette-card" id="rouletteCard">
+          <img id="rcImg" alt="Rekomendasi" />
+          <div class="rc-body">
+            <h3 id="rcName"></h3>
+            <div class="rc-price" id="rcPrice"></div>
+            <div class="badges">
+              <span class="badge">Best Seller</span>
+              <span class="badge">Fresh Today</span>
+            </div>
+            <div class="rc-actions">
+              <button class="btn" id="rcAdd">Tambah ke Keranjang</button>
+              <button class="btn ghost" id="rcShuffle">Acak Rekomendasi</button>
             </div>
           </div>
-        `;
-        grid.appendChild(card);
-      });
+        </div>
+      </div>
+    </div>
+  </section>
 
-      // Attach button listeners
-      grid.querySelectorAll('[data-action]').forEach(btn=>{
-        btn.addEventListener('click', e=>{
-          const id = Number(btn.dataset.id);
-          const action = btn.dataset.action;
-          const product = products.find(x=>x.id===id);
-          if(action==='view') openModal(product);
-          if(action==='add') flyToCart(btn, product);
-        });
-      });
-    }
+  <!-- ===== WHY US ===== -->
+  <section id="why" class="section">
+    <div class="wrap why-grid">
+      <div class="why-card reveal">
+        <h3>Transparansi Bahan</h3>
+        <p>Kami pakai susu segar, butter Eropa, cokelat couverture. Tanpa pengawet berlebih.</p>
+      </div>
+      <div class="why-card reveal">
+        <h3>Allergen Friendly</h3>
+        <p>Lihat lencana alergen di setiap produk (susu, telur, gluten, kacang) agar kamu belanja dengan tenang.</p>
+      </div>
+      <div class="why-card reveal">
+        <h3>Freshness Meter</h3>
+        <p>Animasi indikator “Fresh Today” memastikan batch terbaru baru saja keluar dari oven.</p>
+      </div>
+      <div class="why-card reveal">
+        <h3>Points & Rewards</h3>
+        <p>Kumpulkan poin setiap transaksi. Tukar dengan diskon spesial mingguan.</p>
+      </div>
+    </div>
+  </section>
 
-    function openModal(product){
-      modalTitle.textContent = product.name;
-      modalDesc.textContent = product.desc;
-      modalPrice.textContent = money(product.price);
-      modalImg.innerHTML = cakeSVG(product.name);
-      modal.classList.add('open');
-      modalAdd.onclick = ()=>{ flyToCart(modalAdd, product); closeModal(); };
-    }
-    function closeModal(){ modal.classList.remove('open'); }
-    modalClose.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e)=>{ if(e.target===modal) closeModal(); });
+  <!-- ===== TESTI ===== -->
+  <section id="testi" class="section alt">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="title">Apa Kata Mereka</h2>
+      </div>
+      <div class="marquee">
+        <div class="track">
+          <span>“Cheesecake-nya lumer parah!” — Rani</span>
+          <span>“Cupcake-nya cantik dan enak.” — Devi</span>
+          <span>“Pengantaran cepat, kue masih hangat.” — Bima</span>
+          <span>“Brownies paling fudgy!” — Andra</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    function flyToCart(btn, product){
-      // increment cart
-      cartCount++;
-      cartCountEl.textContent = cartCount;
-      cartCountEl.style.display = 'block';
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="wrap">
+      <div class="foot-brand">
+        <div class="logo">🍰</div>
+        <div>
+          <strong>SweetCrumbs</strong><br>
+          <small>© <span id="year"></span> Semua hak cipta dilindungi.</small>
+        </div>
+      </div>
+      <div class="foot-links">
+        <a href="#menu">Menu</a>
+        <a href="#signature">Signature</a>
+        <a href="#why">Kenapa Kami</a>
+      </div>
+      <div class="foot-cta">
+        <a class="btn primary" href="https://wa.me/6281234567890" target="_blank" rel="noopener">Hubungi Kami</a>
+      </div>
+    </div>
+  </footer>
 
-      // create flying clone
-      const rect = btn.getBoundingClientRect();
-      const cartRect = cartBtn.getBoundingClientRect();
-      const fly = document.createElement('div');
-      fly.style.position='fixed';
-      fly.style.left = rect.left + 'px';
-      fly.style.top = rect.top + 'px';
-      fly.style.width = '48px';
-      fly.style.height = '48px';
-      fly.style.borderRadius='8px';
-      fly.style.zIndex=9999;
-      fly.style.overflow='hidden';
-      fly.innerHTML = cakeSVG(product.name);
-      document.body.appendChild(fly);
+  <!-- ===== CART PANEL ===== -->
+  <div class="cart-dim" id="cartDim" aria-hidden="true"></div>
+  <aside class="cart-panel" id="cartPanel" aria-label="Keranjang belanja" aria-hidden="true">
+    <div class="cart-head">
+      <h3>Keranjang • SweetCrumbs</h3>
+      <button id="closeCart" class="icon-btn" aria-label="Tutup">✕</button>
+    </div>
+    <div class="cart-body" id="cartBody"></div>
+    <div class="cart-foot">
+      <div class="sum">
+        <div><span>Subtotal</span><strong id="subtotal">Rp0</strong></div>
+        <div><span>PPN 11%</span><strong id="tax">Rp0</strong></div>
+        <div class="total"><span>Total</span><strong id="total">Rp0</strong></div>
+      </div>
+      <button id="checkout" class="btn primary">Checkout</button>
+      <small class="hint">Checkout akan membuka WhatsApp dengan ringkasan pesanan.</small>
+    </div>
+  </aside>
 
-      // animate
-      const dx = cartRect.left + cartRect.width/2 - rect.left;
-      const dy = cartRect.top + cartRect.height/2 - rect.top;
-      fly.animate([
-        { transform: 'translate(0px,0px) scale(1)', opacity:1 },
-        { transform: `translate(${dx}px, ${dy}px) scale(.2) rotate(20deg)`, opacity:0.2 }
-      ],{duration:700,easing:'cubic-bezier(.2,.9,.3,1)'}).onfinish = ()=>{ fly.remove();
-        // small bounce on cart
-        cartBtn.animate([{transform:'scale(1)'},{transform:'scale(1.14)'},{transform:'scale(1)'}],{duration:350});
-      };
-    }
-
-    // filtering & search
-    function applyFilters(){
-      const q = searchInput.value.trim("Temukan cita rasa terbaik...").toLowerCase();
-      let list = products.filter(p=>{
-        const matchesCat = activeCategory==='all' || p.tag===activeCategory;
-        const matchesQ = q==='' || p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || String(p.price).includes(q);
-        return matchesCat && matchesQ;
-      });
-      renderGrid(list);
-    }
-
-    searchInput.addEventListener('input', ()=>{ applyFilters(); });
-
-    filterRow.querySelectorAll('.chip').forEach(ch=>{
-      ch.addEventListener('click', ()=>{
-        filterRow.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-        ch.classList.add('active');
-        activeCategory = ch.dataset.cat;
-        applyFilters();
-      });
-    });
-
-    // initial render
-    renderGrid(products);
-
-    // handy demo buttons
-    document.getElementById('viewAllBtn').addEventListener('click', ()=>{ searchInput.value=''; activeCategory='all'; filterRow.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); filterRow.querySelector('.chip[data-cat="all"]').classList.add('active'); applyFilters(); });
-    document.getElementById('specialBtn').addEventListener('click', ()=>{ alert('Promo: Diskon besar-besaran untuk semua kue cokelat hari ini!'); });
-
-  </script>
+  <script src="assets/js/app.js"></script>
 </body>
 </html>
