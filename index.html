@@ -102,13 +102,13 @@
     <div class="controls">
       <div class="search">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="opacity:.7"><path d="M21 21l-4.35-4.35" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <input id="searchInput" placeholder=""Cari yang bikin hati lumer..." />
+        <input id="searchInput" placeholder="""Temukan cita rasa terbaik..."..." />
       </div>
       <div class="filters" id="filterRow">
-        <div class="chip active" data-cat="all">Semua</div>
+        <div class="chip active" data-cat="all">all</div>
         <div class="chip" data-cat="cheesecake">Cheesecake</div>
-        <div class="chip" data-cat="chocolate">Cokelat</div>
-        <div class="chip" data-cat="fruit">Buah</div>
+        <div class="chip" data-cat="chocolate">chocolate</div>
+        <div class="chip" data-cat="fruit">fruit</div>
         <div class="chip" data-cat="cupcake">Cupcake</div>
       </div>
     </div>
@@ -154,8 +154,8 @@
         <p id="modalDesc" style="color:var(--muted)"></p>
         <p style="font-weight:800;font-size:20px;margin-top:12px" id="modalPrice">Rp0</p>
         <div style="margin-top:16px;display:flex;gap:10px">
-          <button class="btn btn-primary" id="modalAdd">kalo minat ini keranjangnya ya</button>
-          <button class="btn btn-ghost" id="modalClose">Nanti Lagi</button>
+          <button class="btn btn-primary" id="modalAdd">klik disini ya</button>
+          <button class="btn btn-ghost" id="modalClose">selesai</button>
         </div>
       </div>
     </div>
@@ -285,7 +285,7 @@
 
     // filtering & search
     function applyFilters(){
-      const q = searchInput.value.trim().toLowerCase();
+      const q = searchInput.value.trim("Temukan cita rasa terbaik...").toLowerCase();
       let list = products.filter(p=>{
         const matchesCat = activeCategory==='all' || p.tag===activeCategory;
         const matchesQ = q==='' || p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || String(p.price).includes(q);
